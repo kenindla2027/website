@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz STSI4102 - Algoritma dan Pemrograman</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f2f2f2; }
+    .container { width:70%; margin:40px auto; background:white; padding:20px; border-radius:10px; }
+    .question-box { margin-bottom:20px; }
+    .nav-btn { padding:10px 20px; margin:5px; }
+    #result { margin-top:20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Quiz STSI4102 - Algoritma dan Pemrograman</h2>
+
+    <div id="quiz"></div>
+    <div id="navigation"></div>
+    <div id="result"></div>
+  </div>
+
+<script>
+const questions = [
+  {q:"Algoritma adalah...",options:["Bahasa pemrograman","Urutan langkah logis untuk menyelesaikan masalah","Kode mesin","Struktur data"],answer:1,explain:"Algoritma adalah serangkaian langkah atau prosedur logis untuk menyelesaikan masalah."},
+  {q:"Pseudocode berguna untuk...",options:["Menjalankan program","Mendesain algoritma dalam bahasa alami terstruktur","Menyimpan data","Mengoptimasi memori"],answer:1,explain:"Pseudocode digunakan untuk menuliskan algoritma secara mudah dibaca manusia sebelum dikodekan."},
+  {q:"Flowchart adalah representasi...",options:["Grafik data","Alur kontrol algoritma secara grafis","Basis data","Compile time error"],answer:1,explain:"Flowchart memvisualisasikan alur logika atau proses dalam algoritma."},
+  {q:"Tipe data yang biasanya menyimpan bilangan desimal adalah...",options:["INT","CHAR","FLOAT/DOUBLE","BOOLEAN"],answer:2,explain:"FLOAT atau DOUBLE dipakai untuk menyimpan bilangan pecahan/desimal."},
+  {q:"Operator '==' biasanya digunakan untuk...",options:["Penugasan","Perbandingan kesamaan","Increment","Komentar"],answer:1,explain:"'==' adalah operator perbandingan untuk mengecek kesamaan nilai."},
+  {q:"Perbedaan kompilator dan interpreter adalah...",options:["Kompilator menjalankan kode baris per baris","Interpreter menerjemahkan seluruh program sekaligus","Kompilator menerjemahkan seluruh program ke kode mesin, interpreter menerjemahkan baris per baris","Tidak ada perbedaan"],answer:2,explain:"Kompilator menerjemahkan seluruh source ke kode mesin sebelum eksekusi; interpreter menerjemahkan dan mengeksekusi baris per baris."},
+  {q:"Loop yang paling tepat digunakan saat jumlah iterasi diketahui adalah...",options:["While","Do-while","For loop","Recursion"],answer:2,explain:"For loop cocok ketika jumlah iterasi sudah diketahui."},
+  {q:"Struktur kontrol yang menjalankan blok minimal satu kali adalah...",options:["If","For","Do-while","Switch"],answer:2,explain:"Do-while akan mengeksekusi blok terlebih dahulu lalu cek kondisi; minimal sekali."},
+  {q:"Fungsi rekursif adalah...",options:["Fungsi yang memanggil fungsi lain","Fungsi yang memanggil dirinya sendiri","Fungsi tanpa parameter","Fungsi built-in"],answer:1,explain:"Rekursi terjadi ketika fungsi memanggil dirinya sendiri untuk menyelesaikan subproblem."},
+  {q:"Kondisi base case pada rekursi berguna untuk...",options:["Mempercepat kompilasi","Mencegah infinite recursion dan berhenti","Menambah variabel global","Mendeklarasikan fungsi"],answer:1,explain:"Base case menentukan kondisi berhenti sehingga rekursi tidak berjalan tanpa akhir."},
+  {q:"Binary search memiliki kompleksitas waktu...",options:["O(n)","O(log n)","O(n^2)","O(1)"],answer:1,explain:"Binary search pada data terurut berjalan dalam O(log n)."},
+  {q:"Sequential (linear) search paling cocok untuk...",options:["Data terurut besar","Data kecil atau tidak terurut","Data dalam tree","Hash table"],answer:1,explain:"Linear search cocok untuk data kecil atau saat data tidak terurut."},
+  {q:"Bubble sort memiliki kompleksitas rata-rata...",options:["O(n)","O(n log n)","O(n^2)","O(log n)"],answer:2,explain:"Bubble sort pada umumnya O(n^2)."},
+  {q:"Merge sort dibangun berdasarkan teknik...",options:["Divide and conquer","Greedy","Dynamic programming","Brute force"],answer:0,explain:"Merge sort membagi masalah menjadi dua bagian, sortir masing-masing, lalu gabungkan."},
+  {q:"Array dan linked list berbeda pada...",options:["Akses indeks O(1) pada array, O(n) pada linked list","Linked list lebih cepat akses indeks","Array tidak memiliki ukuran tetap","Linked list tidak menyimpan data"],answer:0,explain:"Array mendukung akses indeks langsung O(1), sedangkan linked list memerlukan traversing O(n)."},
+  {q:"Stack biasanya diimplementasikan menggunakan...",options:["Array atau linked list","Hanya linked list","Hanya array","Tree"],answer:0,explain:"Stack bisa diimplementasikan baik dengan array maupun linked list."},
+  {q:"Queue FIFO artinya...",options:["First In First Out","First In Fast Out","Final In First Out","First In Function Out"],answer:0,explain:"FIFO = First In First Out; elemen yang masuk dulu keluar dulu."},
+  {q:"Parameter passing 'by value' berarti...",options:["Mengirim alamat variabel","Mengirim salinan nilai variabel","Mengirim tipe data","Tidak mengirim apapun"],answer:1,explain:"By value mengirim salinan nilai sehingga perubahan dalam fungsi tidak memengaruhi variabel asal."},
+  {q:"Scope variabel lokal terbatas pada...",options:["Seluruh program","Fungsi atau blok tempat dideklarasikan","File lain","Heap"],answer:1,explain:"Variabel lokal hanya bisa diakses di dalam fungsi atau blok deklarasinya."},
+  {q:"Stack overflow biasanya terjadi karena...",options:["Kelebihan memori heap","Rekursi tak terbatas atau penggunaan stack berlebihan","Kesalahan sintaks","File tidak ditemukan"],answer:1,explain:"Stack overflow sering disebabkan rekursi tanpa base case atau alokasi stack yang berlebihan."},
+  {q:"Complexity waktu algoritma penting untuk...",options:["Menentukan warna UI","Menilai skalabilitas dan performa","Menentukan memory layout","Menentukan compiler"],answer:1,explain:"Analisis kompleksitas membantu memahami performa algoritma saat skala data meningkat."},
+  {q:"Greedy algorithm biasanya cocok untuk...",options:["Semua masalah optimasi","Masalah di mana pilihan lokal optimal menghasilkan solusi global","Masalah tanpa struktur optimal subproblem","Sorting"],answer:1,explain:"Greedy cocok jika pilihan lokal terbaik dapat membentuk solusi optimal global."},
+  {q:"Dynamic programming berbeda dari rekursi biasa karena...",options:["Tidak menggunakan memoization","Menggunakan memoization untuk menghindari perhitungan ulang","Hanya untuk sorting","Lebih lambat"],answer:1,explain:"Dynamic programming menyimpan hasil subproblem (memoization) untuk efisiensi."},
+  {q:"Contoh bahasa pemrograman terkompilasi adalah...",options:["Python","JavaScript","C","Ruby"],answer:2,explain:"C biasanya dikompilasi ke kode mesin sebelum dieksekusi."},
+  {q:"Bahasa yang menggunakan virtual machine (mis. JVM) termasuk...",options:["C","Assembly","Java","FORTRAN"],answer:2,explain:"Java dikompilasi ke bytecode yang dijalankan di JVM."},
+  {q:"Statement if-else berguna untuk...",options:["Perulangan","Percabangan alur kontrol","Deklarasi variabel","Kompilasi"],answer:1,explain:"If-else digunakan untuk memilih jalur eksekusi berdasarkan kondisi."},
+  {q:"Switch-case biasanya lebih cocok daripada if-else saat...",options:["Hanya dua kondisi","Banyak cabang diskrit berdasarkan nilai konstan","Menggunakan kondisi range","Perluekspresi boolean kompleks"],answer:1,explain:"Switch berguna untuk banyak cabang diskrit (nilai konstan)."},
+  {q:"Debugging adalah proses untuk...",options:["Menulis fitur baru","Mengidentifikasi dan memperbaiki bug","Menambah performa CPU","Mendesain UI"],answer:1,explain:"Debugging bertujuan menemukan dan memperbaiki kesalahan program."},
+  {q:"Unit testing berguna untuk...",options:["Menguji modul kecil secara terpisah","Mengganti integrasi sistem","Deploy otomatis","Membuat dokumentasi"],answer:0,explain:"Unit test menguji fungsi atau modul kecil untuk memastikan mereka bekerja benar."},
+  {q:"Komentar dalam kode berfungsi untuk...",options:["Dieksekusi compiler","Menjelaskan maksud kode bagi pembaca","Mengubah perilaku program","Mengoptimasi runtime"],answer:1,explain:"Komentar menjelaskan tujuan atau logika kode bagi pengembang."},
+  {q:"IDE (Integrated Development Environment) menyediakan...",options:["Compiler saja","Editor, debugger, build tools dalam satu paket","Hanya text editor","Hanya versi control"],answer:1,explain:"IDE menyatukan editor, debugger, compiler, dan alat bantu lain."},
+  {q:"Memory heap biasanya digunakan untuk...",options:["Menyimpan variabel lokal fungsi","Menyimpan objek/alokasi dinamis","Menyimpan kode program","Menyimpan register CPU"],answer:1,explain:"Heap dipakai untuk alokasi memori dinamis (mis. malloc/new)."},
+  {q:"Stabilitas algoritma sorting berarti...",options:["Menghasilkan hasil berbeda","Mempertahankan urutan relatif elemen yang sama","Lebih cepat","Menggunakan lebih banyak memori"],answer:1,explain:"Stable sort menjaga urutan relatif elemen yang memiliki nilai sama."},
+  {q:"Tail recursion adalah...",options:["Rekursi di akhir fungsi yang bisa dioptimalkan menjadi iterasi","Rekursi tanpa base case","Rekursi yang selalu gagal","Rekursi doubly"],answer:0,explain:"Tail recursion dapat dioptimalkan oleh compiler menjadi loop untuk mencegah penumpukan stack."},
+  {q:"Komentar TODO dalam kode biasanya menunjukkan...",options:["Bug fatal","Bagian yang perlu dikerjakan atau diperbaiki nanti","Kompilasi berakhir","Fungsi telah selesai"],answer:1,explain:"TODO adalah penanda tugas/peningkatan yang perlu dilakukan kemudian."},
+  {q:"Big O notation menggambarkan...",options:["Waktu eksekusi persis","Asimptotik batas atas kompleksitas waktu atau ruang","Ukuran input","Versi bahasa pemrograman"],answer:1,explain:"Big O menunjukkan bagaimana kompleksitas tumbuh seiring besar input."},
+  {q:"Algoritma 'divide and conquer' contoh selain merge sort adalah...",options:["Bubble sort","Quick sort","Insertion sort","Linear search"],answer:1,explain:"Quick sort juga menggunakan teknik divide and conquer."},
+  {q:"Pointer NULL berarti...",options:["Pointer menunjuk ke alamat valid","Pointer tidak menunjuk kemana-mana","Pointer menunjuk ke heap","Pointer hanya untuk stack"],answer:1,explain:"NULL menunjukkan pointer tidak mengarah ke alamat yang valid."},
+  {q:"Stack frame menyimpan...",options:["Data program","Informasi lokal fungsi dan return address","Seluruh heap","File konfigurasi"],answer:1,explain:"Stack frame berisi variabel lokal, parameter, dan alamat kembalian tiap panggilan fungsi."},
+  {q:"Refactoring kode bertujuan untuk...",options:["Menambah fitur baru secara langsung","Meningkatkan struktur/code quality tanpa mengubah perilaku eksternal","Menghapus fitur","Mengubah bahasa pemrograman"],answer:1,explain:"Refactoring memperbaiki struktur kode agar lebih bersih dan maintainable."}
+];
+
+let index = 0;
+
+function loadQuestion(i) {
+  const q = questions[i];
+  let html = `<div class='question-box'><p><strong>${i+1}. ${q.q}</strong></p>`;
+  q.options.forEach((opt, idx) => {
+    html += `<label><input type='radio' name='q${i}' value='${idx}'> ${opt}</label><br>`;
+  });
+  html += `<br><button onclick='checkAnswer(${i})'>Cek Jawaban</button>`;
+  html += `</div>`;
+  document.getElementById("quiz").innerHTML = html;
+  loadNav();
+}
+
+function loadNav() {
+  let nav = "";
+  if(index > 0) nav += `<button class='nav-btn' onclick='prevQ()'>Sebelumnya</button>`;
+  if(index < questions.length-1) nav += `<button class='nav-btn' onclick='nextQ()'>Berikutnya</button>`;
+  document.getElementById("navigation").innerHTML = nav;
+}
+
+function prevQ(){ index--; loadQuestion(index); }
+function nextQ(){ index++; loadQuestion(index); }
+
+function checkAnswer(i) {
+  const selected = document.querySelector(`input[name='q${i}']:checked`);
+  const correct = questions[i].answer;
+
+  if(!selected){ alert("Pilih jawaban dulu!"); return; }
+
+  const user = parseInt(selected.value);
+  const status = user === correct ? "Benar" : "Salah";
+
+  document.getElementById("result").innerHTML =
+    `<p><strong>${status}</strong><br>
+     Jawaban kamu: ${questions[i].options[user]}<br>
+     Jawaban benar: ${questions[i].options[correct]}<br>
+     <em>${questions[i].explain}</em></p>`;
+}
+
+loadQuestion(index);
+</script>
+</body>
+</html>
